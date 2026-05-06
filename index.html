@@ -114,7 +114,17 @@
       flex-direction: column;
       border-right: 2px solid var(--border);
       background: var(--surface);
+      transition: width 0.2s ease, min-width 0.2s ease;
     }
+    .input-panel.collapsed {
+      width: 36px;
+      min-width: 36px;
+      overflow: hidden;
+    }
+    .input-panel.collapsed .panel-bar > *:not(#collapse-btn) { display: none; }
+    .input-panel.collapsed textarea,
+    .input-panel.collapsed .error-bar { display: none; }
+    #collapse-btn { margin-left: auto; flex-shrink: 0; }
     textarea {
       flex: 1;
       border: none;
@@ -334,6 +344,7 @@
       <button class="primary" onclick="doFormat()">Format</button>
       <button onclick="doMinify()">Minify</button>
       <button onclick="doClear()" class="danger-btn">Clear</button>
+      <button id="collapse-btn" onclick="toggleInput()" title="Collapse input panel">◀</button>
     </div>
     <textarea id="input"
       placeholder="Paste JSON here, or drag & drop a .json file…"
@@ -715,6 +726,16 @@
     };
     reader.readAsText(file);
   });
+
+  // ── Input panel collapse ───────────────────────────────────────────
+
+  function toggleInput() {
+    const panel = document.querySelector('.input-panel');
+    const btn   = document.getElementById('collapse-btn');
+    const collapsed = panel.classList.toggle('collapsed');
+    btn.textContent = collapsed ? '▶' : '◀';
+    btn.title = collapsed ? 'Expand input panel' : 'Collapse input panel';
+  }
 
   // ── Keyboard shortcut: Ctrl/Cmd+Enter → Format ─────────────────────
   inputEl.addEventListener('keydown', e => {
